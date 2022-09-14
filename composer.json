@@ -2,5 +2,8 @@
     "name": "hexlet/code",
     "description": "Вычислитель отличий",
     "license": "MIT",
+    "bin": [
+        "bin/gendiff"
+    ],
     "require": {}
 }
