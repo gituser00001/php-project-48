@@ -11,6 +11,7 @@ if (file_exists($autoloadPath1)) {
     require_once $autoloadPath2;
 }
 
+
 $doc = <<<DOC
 Generate diff
 
@@ -23,3 +24,6 @@ Options:
   --version     Show version.
 
 DOC;
+
+$args = Docopt::handle($doc);
+print_r($args);
