@@ -19,7 +19,7 @@ function buildTree($dataAfter, $dataBefore)
     $keys = array_unique(array_merge(array_keys($dataAfter), array_keys($dataBefore)));
     sort($keys);
 
-    $tree = array_map(function ($key) use ($dataAfter, $dataBefore) {
+    return array_map(function ($key) use ($dataAfter, $dataBefore) {
 
         if (!array_key_exists($key, $dataBefore)) {
             return ['key' => $key, 'value' => $dataAfter[$key], 'type' => 'deleted'];
@@ -35,8 +35,6 @@ function buildTree($dataAfter, $dataBefore)
 
         return ['key' => $key, 'value' => $dataBefore[$key], 'NewValue' => $dataAfter[$key], 'type' => 'changed'];
     }, $keys);
-
-    return $tree;
 }
 
 function isBool($value)
