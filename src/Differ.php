@@ -57,18 +57,18 @@ function getFormattedDifference($builderTree)
 
         switch ($type) {
             case 'deleted':
-                return "- $key: $value" . PHP_EOL;
+                return "  - $key: $value" . PHP_EOL;
             case 'added':
-                return "+ $key: $value" . PHP_EOL;
+                return "  + $key: $value" . PHP_EOL;
             case 'unchanged':
-                return "  $key: $value" . PHP_EOL;
+                return "    $key: $value" . PHP_EOL;
             case 'changed':
                 $newValue = isBool($node['NewValue']);
-                return "- $key: $value" . PHP_EOL . "+ $key: $newValue" . PHP_EOL;
+                return "  - $key: $newValue" . PHP_EOL . "  + $key: $value" . PHP_EOL;
         }
     }, $builderTree);
 
-    return "{\n" . implode('', $result) . "}\n";
+    return "{\n" . implode('', $result) . "}";
 }
 
 function getContent($pathToFile)
