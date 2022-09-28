@@ -10,6 +10,9 @@
             "src/Differ.php"
         ]
     },
+    "scripts": {
+        "test": "phpunit tests"
+    },
     "require": {
         "docopt/docopt": "^1.0"
     },
