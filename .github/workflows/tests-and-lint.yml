@@ -1,0 +1,29 @@
+name: tests
+
+on:
+  push:
+    branches:      
+       - main
+
+jobs:
+  build:  
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v2
+
+      - name: Setup
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: phpcs
+
+      - name: install
+        run: make install
+
+      - name: linter
+        run: make lint
+
+      - name: testDiffer
+        run: make test
