@@ -28,8 +28,11 @@ jobs:
       - name: testDiffer
         run: make test
         
+      - name: code-coverage
+        uses: paambaati/codeclimate-action@v2.7.5
+
         env:
-          CC_TEST_REPORTER_ID: e8e74e0edf93fc627310332d88a9caef2369615c15997d2ff4bc30f00ea54a68
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
           coverageCommand: make test-coverage
           coverageLocations: ${{github.workplace}}/build/logs/clover.xml:clover
