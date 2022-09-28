@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1664371534">
-  <project timestamp="1664371534">
+<coverage generated="1664372438">
+  <project timestamp="1664372438">
     <file name="/home/sal/projects/hexlet/php-project-48/src/Differ.php">
       <line num="7" type="stmt" count="1"/>
       <line num="8" type="stmt" count="1"/>
