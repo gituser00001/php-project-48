@@ -27,3 +27,10 @@ jobs:
 
       - name: testDiffer
         run: make test
+        
+        env:
+          CC_TEST_REPORTER_ID: e8e74e0edf93fc627310332d88a9caef2369615c15997d2ff4bc30f00ea54a68
+        with:
+          coverageCommand: make test-coverage
+          coverageLocations: ${{github.workplace}}/build/logs/clover.xml:clover
+          debug: true
