@@ -2,13 +2,15 @@
 
 namespace Differ\Differ;
 
+use function Differ\Parsers\parseData;
+
 function genDiff($pathToFile1, $pathToFile2, $format = 'empty')
 {
-    $contentFromFile1 = getContent($pathToFile1);
-    $contentFromFile2 = getContent($pathToFile2);
+    [$content1, $extension1] = getContent($pathToFile1);
+    [$content2, $extension2] = getContent($pathToFile2);
 
-    $dataFromFile1 = json_decode($contentFromFile1, true);
-    $dataFromFile2 = json_decode($contentFromFile2, true);
+    $dataFromFile1 = parseData($content1, $extension1);
+    $dataFromFile2 = parseData($content2, $extension2);
 
     $result = buildTree($dataFromFile1, $dataFromFile2);
     return getFormattedDifference($result);
@@ -77,5 +79,8 @@ function getContent($pathToFile)
         throw new \Exception("wrong file path {$pathToFile}");
     }
 
-    return file_get_contents($realPath);
+    $content = file_get_contents($realPath);
+    $extension = pathinfo($content, PATHINFO_EXTENSION);
+
+    return [$content, $extension];
 }
