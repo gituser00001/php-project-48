@@ -8,7 +8,9 @@
     "autoload": {
         "files": [
             "src/Differ.php",
-            "src/Parsers.php"
+            "src/Parsers.php",
+            "src/Formatter.php",
+            "src/Formatters/Stylish.php"
         ]
     },
     "scripts": {
