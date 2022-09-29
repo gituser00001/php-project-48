@@ -3,8 +3,9 @@
 namespace Differ\Differ;
 
 use function Differ\Parsers\parseData;
+use function Differ\Formatter\getFormattedDifference;
 
-function genDiff($pathToFile1, $pathToFile2, $format = 'empty')
+function genDiff($pathToFile1, $pathToFile2, $format = 'stylish')
 {
     [$content1, $extension1] = getContent($pathToFile1);
     [$content2, $extension2] = getContent($pathToFile2);
@@ -13,7 +14,7 @@ function genDiff($pathToFile1, $pathToFile2, $format = 'empty')
     $dataFromFile2 = parseData($content2, $extension2);
 
     $result = buildTree($dataFromFile1, $dataFromFile2);
-    return getFormattedDifference($result);
+    return getFormattedDifference($result, $format);
 }
 
 function buildTree($dataAfter, $dataBefore)
@@ -46,29 +47,6 @@ function isBool($value)
     } else {
         return $value;
     }
-}
-
-function getFormattedDifference($builderTree)
-{
-    $result = array_map(function ($node) {
-        $type = $node['type'];
-        $key = $node['key'];
-        $value = isBool($node['value']);
-
-        switch ($type) {
-            case 'deleted':
-                return "  - $key: $value" . PHP_EOL;
-            case 'added':
-                return "  + $key: $value" . PHP_EOL;
-            case 'unchanged':
-                return "    $key: $value" . PHP_EOL;
-            case 'changed':
-                $newValue = isBool($node['NewValue']);
-                return "  - $key: $newValue" . PHP_EOL . "  + $key: $value" . PHP_EOL;
-        }
-    }, $builderTree);
-
-    return "{\n" . implode('', $result) . "}";
 }
 
 function getContent($pathToFile)
