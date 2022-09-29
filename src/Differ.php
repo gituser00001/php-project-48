@@ -17,37 +17,55 @@ function genDiff($pathToFile1, $pathToFile2, $format = 'stylish')
     return getFormattedDifference($result, $format);
 }
 
-function buildTree($dataAfter, $dataBefore)
+function buildTree($dataBefore, $dataAfter)
 {
-    $keys = array_unique(array_merge(array_keys($dataAfter), array_keys($dataBefore)));
+    $keys = array_unique(array_merge(array_keys($dataBefore), array_keys($dataAfter)));
     sort($keys);
 
-    return array_map(function ($key) use ($dataAfter, $dataBefore) {
+    $tree = array_map(function ($key) use ($dataBefore, $dataAfter) {
 
-        if (!array_key_exists($key, $dataBefore)) {
-            return ['key' => $key, 'value' => $dataAfter[$key], 'type' => 'deleted'];
-        }
+        $valueAfter = $dataAfter[$key] ?? null;
+        $valueBefor = $dataBefore[$key] ?? null;
 
         if (!array_key_exists($key, $dataAfter)) {
-            return ['key' => $key, 'value' => $dataBefore[$key], 'type' => 'added'];
+            return [
+                'key' => $key,
+                'value' => $valueBefor,
+                'type' => 'deleted'];
         }
 
-        if ($dataAfter[$key] === $dataBefore[$key]) {
-            return ['key' => $key, 'value' => $dataBefore[$key], 'type' => 'unchanged'];
+        if (!array_key_exists($key, $dataBefore)) {
+            return [
+                'key' => $key,
+                'value' => $valueAfter,
+                'type' => 'added'];
         }
 
-        return ['key' => $key, 'value' => $dataBefore[$key], 'NewValue' => $dataAfter[$key], 'type' => 'changed'];
+        if ($valueAfter === $valueBefor) {
+            return [
+                'key' => $key,
+                'value' => $valueBefor,
+                'type' => 'unchanged'];
+        }
+
+        if (is_array($valueBefor) && is_array($valueAfter)) {
+            return [
+                'key' => $key,
+                'type' => 'nested',
+                'children' => buildTree($valueBefor, $valueAfter)
+            ];
+        }
+
+        return [
+            'key' => $key,
+            'oldValue' => $valueBefor,
+            'newValue' => $valueAfter,
+            'type' => 'changed'];
     }, $keys);
+
+    return $tree;
 }
 
-function isBool($value)
-{
-    if (is_bool($value)) {
-        return $value ? 'true' : 'false';
-    } else {
-        return $value;
-    }
-}
 
 function getContent($pathToFile)
 {
@@ -58,7 +76,6 @@ function getContent($pathToFile)
     }
 
     $content = file_get_contents($realPath);
-    $extension = pathinfo($content, PATHINFO_EXTENSION);
-
+    $extension = pathinfo($realPath, PATHINFO_EXTENSION);
     return [$content, $extension];
 }
