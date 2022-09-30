@@ -72,7 +72,7 @@ function getContent(string $pathToFile)
 {
     $realPath = realpath($pathToFile);
 
-    if (!$realPath) {
+    if ($realPath === false) {
         throw new \Exception("wrong file path {$pathToFile}");
     }
 

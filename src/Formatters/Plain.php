@@ -43,7 +43,7 @@ function makePlain(array $diffTree, string $path = ''): array
     return array_filter($result);
 }
 
-function makeString($value)
+function makeString(mixed $value)
 {
     if (is_bool($value)) {
         return $value ? 'true' : 'false';
