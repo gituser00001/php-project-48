@@ -4,8 +4,9 @@ namespace Differ\Differ;
 
 use function Differ\Parsers\parseData;
 use function Differ\Formatter\getFormattedDifference;
+use function Functional\sort;
 
-function genDiff($pathToFile1, $pathToFile2, $format = 'stylish')
+function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'stylish')
 {
     [$content1, $extension1] = getContent($pathToFile1);
     [$content2, $extension2] = getContent($pathToFile2);
@@ -17,10 +18,10 @@ function genDiff($pathToFile1, $pathToFile2, $format = 'stylish')
     return getFormattedDifference($result, $format);
 }
 
-function buildTree($dataBefore, $dataAfter)
+function buildTree(array $dataBefore, array $dataAfter)
 {
     $keys = array_unique(array_merge(array_keys($dataBefore), array_keys($dataAfter)));
-    sort($keys);
+    $keysSorted = sort($keys, fn ($left, $right) => $left <=> $right);
 
     $tree = array_map(function ($key) use ($dataBefore, $dataAfter) {
 
@@ -61,13 +62,13 @@ function buildTree($dataBefore, $dataAfter)
             'oldValue' => $valueBefor,
             'newValue' => $valueAfter,
             'type' => 'changed'];
-    }, $keys);
+    }, $keysSorted);
 
     return $tree;
 }
 
 
-function getContent($pathToFile)
+function getContent(string $pathToFile)
 {
     $realPath = realpath($pathToFile);
 
